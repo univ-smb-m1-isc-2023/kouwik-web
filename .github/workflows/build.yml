@@ -1,0 +1,43 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name : build main branch
+    permissions: write-all
+    runs-on: ubuntu-22.04
+
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 20
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build
+
+  deploy:
+    runs-on: ubuntu-22.04
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages # Déployer sur la branche gh-pages
+          folder: build
+          repository: univ-smb-m1-isc-2023/kwouik-web
