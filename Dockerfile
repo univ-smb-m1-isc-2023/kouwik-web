@@ -1,22 +1,35 @@
-# Utilisez l'image Node.js officielle comme base
-FROM node:20
+# Stage 1: Use official Node.js image as the base image for building
+FROM node:latest as build
 
-# Définissez le répertoire de travail dans le conteneur
+# Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copiez les fichiers du package.json et du package-lock.json pour installer les dépendances
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Installez les dépendances
+# Install dependencies
 RUN npm install
 
-# Copiez le reste des fichiers de l'application
+# Copy the entire project to the working directory
 COPY . .
 
-# Construisez l'application React pour la production
+# Build the React app
 RUN npm run build
 
+# Stage 2: Use a lightweight Node.js image for production
+FROM node:alpine
+
+# Set the working directory inside the container
+WORKDIR /usr/src/app
+
+# Copy the build output from the previous stage
+COPY --from=build /usr/src/app/build ./build
+
+# Install serve to run the production server
+RUN npm install -g serve
+
+# Expose port 3000 to the outside world
 EXPOSE 3000
 
-# Commande pour démarrer l'application
-CMD ["npm", "start"]
+# Command to run the production server
+CMD ["serve", "-s", "build"]
