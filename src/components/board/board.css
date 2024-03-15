@@ -1,0 +1,16 @@
+.board {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .column {
+    flex: 1;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .column h2 {
+    margin-bottom: 10px;
+  }
+  

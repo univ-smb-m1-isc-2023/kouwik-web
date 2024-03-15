@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Ticket from '../ticket';
 import { useDrop } from 'react-dnd';
+import './column.css';
 
 const Column = ({ id, title, tickets, onVote, onEdit, onMoveTicket }) => {
   const [, drop] = useDrop({

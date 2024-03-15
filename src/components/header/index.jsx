@@ -1,11 +1,12 @@
 import React from 'react';
-import HeaderLogo from "../../ressources/pictures/tom.jpg"
+import HeaderLogo from "../../ressources/pictures/tom.jpg";
+import './header.css';
 
 function Header() {
   return (
-    <header style={{ display: 'flex', alignItems: 'center', padding: '10px', backgroundColor: '#f5f5f5' }}>
-      <img src={HeaderLogo} alt="Logo" style={{ height: '50px' }} />
-      <h1 style={{ marginLeft: '10px' }}>Mon Application</h1>
+    <header className="header">
+      <img src={HeaderLogo} alt="Logo" className="logo" />
+      <h1 className="title">Mon Application</h1>
     </header>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
+import './ticket.css';
 
 const Ticket = ({ id, content, votes, columnId, onVote, onEdit }) => {
   const [{ isDragging }, drag] = useDrag({

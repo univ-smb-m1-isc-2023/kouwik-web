@@ -1,0 +1,22 @@
+.ticket {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .ticket p {
+    margin: 0;
+  }
+  
+  .ticket input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .ticket button {
+    margin-right: 5px;
+  }
+  
