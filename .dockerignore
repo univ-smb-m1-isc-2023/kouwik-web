@@ -1,2 +1,22 @@
-node_modules
-build
+# Fichiers de sauvegarde
+**/*.bak
+**/*.backup
+
+# Fichiers système
+**/.DS_Store
+**/.npmrc
+
+# Dossiers spécifiques à l'environnement de développement
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Dossiers de sauvegarde de l'IDE
+.idea/
+
+# Fichiers de configuration de l'éditeur
+.vscode/
+
+# Dossier de sortie de la construction
+/build
