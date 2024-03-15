@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+.board {
+  display: flex;
+  justify-content: center;
+}
+
+.columns-container {
+  display: flex;
+}
+
+.column {
+  margin: 0 10px;
+}
