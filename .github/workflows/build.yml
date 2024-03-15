@@ -31,5 +31,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: univ-smb-m1-isc-2023/kwouik-web/main
+          repository: univ-smb-m1-isc-2023/kouwik-web/main
           tags: latest
