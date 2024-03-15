@@ -4,7 +4,6 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import './board.css';
 
-
 const Board = () => {
   const [columns, setColumns] = useState([
     { id: 1, title: "Positive", tickets: [
@@ -33,21 +32,32 @@ const Board = () => {
   };
   
   const handleMoveTicket = (ticketId, newColumnId) => {
-    setColumns(columns.map(column => {
-      if (column.id === newColumnId) {
-        return {
-          ...column,
-          tickets: [...column.tickets, columns.find(col => col.tickets.find(tkt => tkt.id === ticketId)).tickets.find(tkt => tkt.id === ticketId)],
-        };
-      } else {
-        return {
-          ...column,
-          tickets: column.tickets.filter(ticket => ticket.id !== ticketId),
-        };
-      }
-    }));
+    // Trouver la colonne et le ticket source
+    const sourceColumn = columns.find(col => col.tickets.some(tkt => tkt.id === ticketId));
+    const ticket = sourceColumn.tickets.find(tkt => tkt.id === ticketId);
+
+    // Vérifier si le ticket est déplacé dans une nouvelle colonne
+    if (sourceColumn.id !== newColumnId) {
+      setColumns(columns.map(column => {
+        if (column.id === newColumnId) {
+          // Ajouter le ticket à la nouvelle colonne
+          return {
+            ...column,
+            tickets: [...column.tickets, ticket],
+          };
+        } else if (column.id === sourceColumn.id) {
+          // Retirer le ticket de la colonne source
+          return {
+            ...column,
+            tickets: column.tickets.filter(tkt => tkt.id !== ticketId),
+          };
+        } else {
+          return column;
+        }
+      }));
+    }
   };
-  
+
   const handleEdit = (columnId, ticketId, newContent) => {
     setColumns(columns.map(column =>
       column.id === columnId ? {
@@ -60,21 +70,21 @@ const Board = () => {
   };
 
   return (
-<DndProvider backend={HTML5Backend}>
-    <div className="board">
-      {columns.map(column =>
-        <Column
-          key={column.id}
-          id={column.id}
-          title={column.title}
-          tickets={column.tickets}
-          onVote={(ticketId) => handleVote(column.id, ticketId)}
-          onEdit={(ticketId, newContent) => handleEdit(column.id, ticketId, newContent)}
-          onMoveTicket={handleMoveTicket}
-        />
-      )}
-    </div>
-  </DndProvider>
+    <DndProvider backend={HTML5Backend}>
+      <div className="board">
+        {columns.map(column =>
+          <Column
+            key={column.id}
+            id={column.id}
+            title={column.title}
+            tickets={column.tickets}
+            onVote={(ticketId) => handleVote(column.id, ticketId)}
+            onEdit={(ticketId, newContent) => handleEdit(column.id, ticketId, newContent)}
+            onMoveTicket={handleMoveTicket}
+          />
+        )}
+      </div>
+    </DndProvider>
   );
 };
 
