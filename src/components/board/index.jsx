@@ -31,6 +31,20 @@ const Board = () => {
     ));
   };
   
+  const handleCreateTicket = (columnId) => {
+    const newTicket = {
+      id: Math.random(), // Générez un ID unique pour le nouveau ticket (à remplacer par une logique appropriée)
+      content: "Nouveau Ticket",
+      votes: 0,
+    };
+    setColumns(columns.map(column => 
+      column.id === columnId ? {
+        ...column,
+        tickets: [...column.tickets, newTicket],
+      } : column
+    ));
+  };
+  
   const handleMoveTicket = (ticketId, newColumnId) => {
     // Trouver la colonne et le ticket source
     const sourceColumn = columns.find(col => col.tickets.some(tkt => tkt.id === ticketId));
@@ -81,6 +95,7 @@ const Board = () => {
             onVote={(ticketId) => handleVote(column.id, ticketId)}
             onEdit={(ticketId, newContent) => handleEdit(column.id, ticketId, newContent)}
             onMoveTicket={handleMoveTicket}
+            onCreateTicket={handleCreateTicket}
           />
         )}
       </div>
