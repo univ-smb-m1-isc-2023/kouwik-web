@@ -3,6 +3,7 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
 function MyComponent() {
+    /*
     useEffect(() => {
         let socket = new SockJS('http://localhost:8080/ws');
         let stompClient = Stomp.over(socket);
@@ -23,8 +24,38 @@ function MyComponent() {
             }
         };
     }, []); // Empty array means this effect runs once on mount and clean up on unmount
-
-    return <div>My Component</div>;
+*/
+useEffect(() => {
+    const socket = new SockJS('http://localhost:8080/ws');
+    const stompClient = Stomp.over(socket);
+  
+    stompClient.connect({}, () => {
+      stompClient.subscribe('/topic/message', (message) => {
+        if (message.body === 'ok') {
+          console.log('Message received from WebSocket: ', message.body);
+          // Gérez la réception du message ici
+        }
+      });
+    });
+  
+    return () => {
+      stompClient.disconnect();
+    };
+  }, []);
+  
+  const handleButtonClick = () => {
+    fetch('/trigger-websocket', { method: 'POST' })
+      .then(response => response.text())
+      .then(data => console.log(data))
+      .catch(error => console.error('Error triggering WebSocket:', error));
+  };
+  
+  return (
+    <button onClick={handleButtonClick}>Trigger WebSocket</button>
+  );
+  
 }
 
 export default MyComponent;
+
+
