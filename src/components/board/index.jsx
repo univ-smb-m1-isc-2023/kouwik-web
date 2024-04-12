@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Column from '../column';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -6,20 +6,26 @@ import './board.css';
 
 const Board = () => {
   const [columns, setColumns] = useState([
-    { id: 1, title: "Positive", tickets: [
-      { id: 1, content: "Ticket 1", votes: 0 },
-      { id: 2, content: "Ticket 2", votes: 0 },
-    ]},
-    { id: 2, title: "Could be better", tickets: [
-      { id: 3, content: "Ticket 3", votes: 0 },
-      { id: 4, content: "Ticket 4", votes: 0 },
-    ]},
-    { id: 3, title: "Actions", tickets: [
-      { id: 5, content: "Ticket 5", votes: 0 },
-      { id: 6, content: "Ticket 6", votes: 0 },
-    ]}
+    { id: 1, title: "Positive", tickets: [] },
+    { id: 2, title: "Could be better", tickets: [] },
+    { id: 3, title: "Actions", tickets: [] }
   ]);
 
+  useEffect(() => {
+    // Modifier l'URL si nécessaire pour correspondre à votre endpoint correct
+    fetch('http://localhost:8080/tickets/tickets')
+      .then(response => response.json())
+      .then(data => {
+        const newColumns = columns.map(column => ({
+          ...column,
+          tickets: data.filter(ticket => ticket.columnId === column.id),
+        }));
+        setColumns(newColumns);
+      })
+      .catch(error => console.error('Error fetching tickets:', error));
+  }, []); // Le tableau vide assure que l'effet ne s'exécute qu'au montage
+
+  
   const handleVote = (columnId, ticketId) => {
     setColumns(columns.map(column =>
       column.id === columnId ? {
@@ -102,5 +108,6 @@ const Board = () => {
     </DndProvider>
   );
 };
+
 
 export default Board;

@@ -12,7 +12,7 @@ function MyComponent() {
             console.log('Connected: ' + frame);
 
             stompClient.subscribe('/topic/tickets', function(ticket) {
-                console.log(JSON.parse(ticket.body).content);
+                console.log("top top top");
             });
         });
 

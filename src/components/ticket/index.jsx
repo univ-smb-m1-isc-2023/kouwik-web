@@ -23,9 +23,32 @@ const Ticket = ({ id, content, votes, columnId, onVote, onEdit }) => {
   };
 
   const handleSave = () => {
-    onEdit(id, editedContent);
+    const updatedTicket = { id, content: editedContent, columnId, votes };
+  
+    fetch(`http://localhost:8080/tickets/tickets/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedTicket),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Success:', data);
+      onEdit(id, editedContent);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  
     setIsEditing(false);
   };
+  
 
   const handleChange = (e) => {
     setEditedContent(e.target.value);
