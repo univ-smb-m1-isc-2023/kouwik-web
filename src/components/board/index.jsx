@@ -10,10 +10,11 @@ const Board = () => {
     { id: 2, title: "Could be better", tickets: [] },
     { id: 3, title: "Actions", tickets: [] }
   ]);
+  const [boardUuid, setBoardUuid] = useState('');
 
-  useEffect(() => {
-    // Modifier l'URL si nécessaire pour correspondre à votre endpoint correct
-    fetch('http://localhost:8080/tickets/tickets')
+  const fetchTickets = () => {
+    // Assuming the backend endpoint now also takes a board UUID
+    fetch(`http://localhost:8080/tickets/tickets?boardUuid=${boardUuid}`)
       .then(response => response.json())
       .then(data => {
         const newColumns = columns.map(column => ({
@@ -23,75 +24,126 @@ const Board = () => {
         setColumns(newColumns);
       })
       .catch(error => console.error('Error fetching tickets:', error));
-  }, []); // Le tableau vide assure que l'effet ne s'exécute qu'au montage
+  };
+
+  useEffect(() => {
+    // Extract the board UUID from URL or set a new one if not available
+    const uuid = window.location.pathname.split('/')[2] || 'new-uuid-from-backend'; // Adjust logic to fetch from backend
+    setBoardUuid(uuid);
+    fetchTickets(); // Fetch immediately on mount
+    const intervalId = setInterval(fetchTickets, 5000); // Refresh every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, []);
+
+  const handleShareBoard = () => {
+    const url = `${window.location.origin}/boards/${boardUuid}`;
+    navigator.clipboard.writeText(url).then(() => {
+      alert('Board URL copied to clipboard!');
+    }, (err) => {
+      console.error('Could not copy board URL: ', err);
+    });
+  };
 
   
+  
   const handleVote = (columnId, ticketId) => {
-    setColumns(columns.map(column =>
-      column.id === columnId ? {
-        ...column,
-        tickets: column.tickets.map(ticket =>
-          ticket.id === ticketId ? { ...ticket, votes: ticket.votes + 1 } : ticket
-        )
-      } : column
-    ));
+    console.log(ticketId); 
+    fetch(`http://localhost:8080/tickets/${ticketId}/vote`, {
+      method: 'PUT'
+    })
+    .then(response => response.json())
+    .then(updatedTicket => {
+      setColumns(columns.map(column =>
+        column.id === columnId ? {
+          ...column,
+          tickets: column.tickets.map(ticket =>
+            ticket.id === ticketId ? updatedTicket : ticket
+          )
+        } : column
+      ));
+    })
+    .catch(error => console.error('Error voting ticket:', error));
   };
   
-  const handleCreateTicket = (columnId) => {
-    const newTicket = {
-      id: Math.random(), // Générez un ID unique pour le nouveau ticket (à remplacer par une logique appropriée)
-      content: "Nouveau Ticket",
-      votes: 0,
-    };
-    setColumns(columns.map(column => 
-      column.id === columnId ? {
-        ...column,
-        tickets: [...column.tickets, newTicket],
-      } : column
-    ));
+  
+  const handleCreateTicket = (columnId, content = "Nouveau Ticket") => {
+    fetch('http://localhost:8080/tickets/tickets', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        content: content,
+        columnId: columnId
+      })
+    })
+    .then(response => response.json())
+    .then(newTicket => {
+      setColumns(columns.map(column => 
+        column.id === columnId ? {
+          ...column,
+          tickets: [...column.tickets, newTicket],
+        } : column
+      ));
+    })
+    .catch(error => console.error('Failed to create ticket:', error));
   };
   
   const handleMoveTicket = (ticketId, newColumnId) => {
-    // Trouver la colonne et le ticket source
-    const sourceColumn = columns.find(col => col.tickets.some(tkt => tkt.id === ticketId));
-    const ticket = sourceColumn.tickets.find(tkt => tkt.id === ticketId);
+    // URL de l'API pour déplacer le ticket
+    const url = `http://localhost:8080/tickets/tickets/${ticketId}/move?newPosition=${newColumnId}`;
 
-    // Vérifier si le ticket est déplacé dans une nouvelle colonne
-    if (sourceColumn.id !== newColumnId) {
-      setColumns(columns.map(column => {
-        if (column.id === newColumnId) {
-          // Ajouter le ticket à la nouvelle colonne
-          return {
-            ...column,
-            tickets: [...column.tickets, ticket],
-          };
-        } else if (column.id === sourceColumn.id) {
-          // Retirer le ticket de la colonne source
-          return {
-            ...column,
-            tickets: column.tickets.filter(tkt => tkt.id !== ticketId),
-          };
-        } else {
-          return column;
+    // Effectuer la requête PUT pour déplacer le ticket
+    fetch(url, {
+        method: 'PUT'
+    })
+    .then(response => {
+        if (!response.ok) {
+            // Si la réponse n'est pas OK, lance une erreur pour être capturée par le bloc catch
+            throw new Error(`Failed to move ticket with status: ${response.status}`);
         }
-      }));
-    }
-  };
+        // Après un succès, mettez à jour l'état pour refléter le changement
+        return fetchTickets();  // Recharger tous les tickets pour mettre à jour l'affichage
+    })
+    .then(() => {
+        console.log('Ticket moved successfully and state updated.');
+    })
+    .catch(error => {
+        console.error('Error moving ticket:', error);
+        alert('Failed to move ticket: ' + error.message); // Afficher l'erreur à l'utilisateur
+    });
+};
 
+
+  
   const handleEdit = (columnId, ticketId, newContent) => {
-    setColumns(columns.map(column =>
-      column.id === columnId ? {
-        ...column,
-        tickets: column.tickets.map(ticket =>
-          ticket.id === ticketId ? { ...ticket, content: newContent } : ticket
-        )
-      } : column
-    ));
+    fetch(`http://localhost:8080/tickets/tickets/${ticketId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ content: newContent })
+    })
+    .then(response => response.json())
+    .then(updatedTicket => {
+      setColumns(columns.map(column =>
+        column.id === columnId ? {
+          ...column,
+          tickets: column.tickets.map(ticket =>
+            ticket.id === ticketId ? updatedTicket : ticket
+          )
+        } : column
+      ));
+    })
+    .catch(error => console.error('Error updating ticket:', error));
   };
+  
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="board">
+        <button onClick={handleShareBoard}>Share This Board</button>
         {columns.map(column =>
           <Column
             key={column.id}
