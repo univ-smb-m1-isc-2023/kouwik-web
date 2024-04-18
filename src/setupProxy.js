@@ -19,4 +19,12 @@ module.exports = function(app) {
       changeOrigin: true,
     })
   );
+  app.use(
+    '/trigger-websocket',
+    createProxyMiddleware({
+      target: 'http://localhost:8080',
+      ws: true, // Activation du support WebSocket
+      changeOrigin: true,
+    })
+  );
 };
