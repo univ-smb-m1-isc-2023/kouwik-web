@@ -1,11 +1,12 @@
 import React from 'react';
-import Board from '../../components/board';
+
+import CreateBoardButton from '../../components/createBoard';
 
 function HelloWorld() {
   return (
   <>
 
-    <Board/>
+    <CreateBoardButton/>
 
   </>
   )

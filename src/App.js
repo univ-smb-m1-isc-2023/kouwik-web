@@ -1,20 +1,17 @@
-import logo from './logo.svg';
-import { Route, Routes, useNavigate} from 'react-router-dom';
-import Header from './components/header/index'
-import Home from './pages/home/index'
-import './App.css';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Board from './components/board';
+import CreateBoard from './components/createBoard';
+import Home from './pages/home';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <Header/>
-      <div className='body-content'>
-        <Routes>
-          <Route path="/" element={<Home/>} />
-        </Routes>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/create-board" element={<CreateBoard />} />
+      <Route path="/boards/:uuid" element={<Board />} />
+    </Routes>
   );
-}
+};
 
 export default App;
