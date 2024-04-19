@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
 import './ticket.css';
 
-const Ticket = ({ id, content, votes, columnId, onVote, onEdit }) => {
+const Ticket = ({ id, content, votes, columnId, onVote, onEdit, onDelete }) => {
   const [{ isDragging }, drag] = useDrag({
     type: 'ticket',
     item: { id, columnId },
@@ -16,6 +16,10 @@ const Ticket = ({ id, content, votes, columnId, onVote, onEdit }) => {
 
   const handleVote = () => {
     onVote(id);
+  };
+
+  const handleDelete = () => {
+    onDelete(id);
   };
 
   const handleEdit = () => {
@@ -70,6 +74,7 @@ const Ticket = ({ id, content, votes, columnId, onVote, onEdit }) => {
           <p>Votes: {votes}</p>
           <button onClick={handleVote}>Vote</button>
           <button onClick={handleEdit}>Edit</button>
+          <button onClick={handleDelete}>delete</button>
         </>
       )}
     </div>

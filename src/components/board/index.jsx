@@ -124,6 +124,31 @@ const Board = () => {
     .catch(error => console.error('Error updating ticket:', error));
   };
 
+  const handleDeleteTicket = (columnId, ticketId) => {
+    fetch(`http://localhost:8080/tickets/tickets/${ticketId}`, {
+      method: 'DELETE'
+    })
+    .then(response => {
+      if (response.ok) {
+        // Filtrez le ticket supprimé de l'état local pour actualiser l'UI
+        const newColumns = columns.map(column => {
+          if (column.id === columnId) {
+            return {
+              ...column,
+              tickets: column.tickets.filter(ticket => ticket.id !== ticketId)
+            };
+          }
+          return column;
+        });
+        setColumns(newColumns);
+      } else {
+        console.error('Failed to delete the ticket');
+      }
+    })
+    .catch(error => console.error('Error deleting ticket:', error));
+  };
+  
+
   return (
     <DndProvider backend={HTML5Backend}>
       <Header />
@@ -139,6 +164,7 @@ const Board = () => {
             onEdit={(ticketId, newContent) => handleEdit(column.id, ticketId, newContent)}
             onMoveTicket={handleMoveTicket}
             onCreateTicket={(content) => handleCreateTicket(column.id, uuid, content)} // Passer le contenu et le boardUuid
+            onDelete={(ticketId) => handleDeleteTicket(column.id, ticketId)} // Ajout de la fonction de suppression
           />
         )}
       </div>

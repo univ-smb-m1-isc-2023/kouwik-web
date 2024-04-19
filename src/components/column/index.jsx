@@ -3,7 +3,7 @@ import Ticket from '../ticket';
 import { useDrop } from 'react-dnd';
 import './column.css';
 
-const Column = ({ id, title, tickets, onVote, onEdit, onMoveTicket, onCreateTicket }) => {
+const Column = ({ id, title, tickets, onVote, onEdit, onMoveTicket, onCreateTicket, onDelete }) => {
   const [, drop] = useDrop({
     accept: 'ticket',
     drop: (item) => onMoveTicket(item.id, id),
@@ -21,6 +21,7 @@ const Column = ({ id, title, tickets, onVote, onEdit, onMoveTicket, onCreateTick
           columnId={id}
           onVote={onVote}
           onEdit={onEdit}
+          onDelete={onDelete}
         />
       )}
     </div>
