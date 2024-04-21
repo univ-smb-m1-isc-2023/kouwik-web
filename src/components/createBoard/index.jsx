@@ -5,7 +5,7 @@ function CreateBoardButton() {
     const navigate = useNavigate(); // Utilisez le hook useNavigate de react-router-dom pour gérer la navigation.
 
     const createBoard = async () => {
-        const response = await fetch('http://localhost:8080/boards', {
+        const response = await fetch('https://api.kouwik.oups.net/boards', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

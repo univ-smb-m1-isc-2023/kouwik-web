@@ -2,7 +2,7 @@
   "name": "kouwik",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8080/",
+  "proxy": "https://api.kouwik.oups.net/",
   "dependencies": {
     "-": "^0.0.1",
     "@testing-library/jest-dom": "^5.17.0",

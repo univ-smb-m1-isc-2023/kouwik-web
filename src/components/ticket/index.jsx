@@ -29,7 +29,7 @@ const Ticket = ({ id, content, votes, columnId, onVote, onEdit, onDelete }) => {
   const handleSave = () => {
     const updatedTicket = { id, content: editedContent, columnId, votes };
   
-    fetch(`http://localhost:8080/tickets/tickets/${id}`, {
+    fetch(`https://api.kouwik.oups.net/tickets/tickets/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

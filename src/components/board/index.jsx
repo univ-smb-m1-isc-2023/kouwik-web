@@ -16,7 +16,7 @@ const Board = () => {
   ]);
 
   const fetchTickets = () => {
-    fetch(`http://localhost:8080/tickets/tickets?boardUuid=${uuid}`)
+    fetch(`https://api.kouwik.oups.net/tickets/tickets?boardUuid=${uuid}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -51,7 +51,7 @@ const Board = () => {
   };
 
   const handleVote = (columnId, ticketId) => {
-    fetch(`http://localhost:8080/tickets/${ticketId}/vote`, { method: 'PUT' })
+    fetch(`https://api.kouwik.oups.net/tickets/${ticketId}/vote`, { method: 'PUT' })
       .then(response => response.json())
       .then(updatedTicket => {
         setColumns(columns.map(column =>
@@ -68,7 +68,7 @@ const Board = () => {
 
   const handleCreateTicket = (columnId, boardId, content = "Nouveau Ticket") => {
     // Assurez-vous que l'URL inclut le paramètre de requête pour boardId
-    const url = `http://localhost:8080/tickets/tickets?boardId=${boardId}`;
+    const url = `https://api.kouwik.oups.net/tickets/tickets?boardId=${boardId}`;
 
     fetch(url, {
       method: 'POST',
@@ -96,7 +96,7 @@ const Board = () => {
   };
 
   const handleMoveTicket = (ticketId, newColumnId) => {
-    fetch(`http://localhost:8080/tickets/tickets/${ticketId}/move?newPosition=${newColumnId}`, { method: 'PUT' })
+    fetch(`https://api.kouwik.oups.net/tickets/tickets/${ticketId}/move?newPosition=${newColumnId}`, { method: 'PUT' })
       .then(response => {
         if (!response.ok) throw new Error(`Failed to move ticket with status: ${response.status}`);
         return fetchTickets();  // Refresh tickets to reflect changes
@@ -105,7 +105,7 @@ const Board = () => {
   };
 
   const handleEdit = (columnId, ticketId, newContent) => {
-    fetch(`http://localhost:8080/tickets/tickets/${ticketId}`, {
+    fetch(`https://api.kouwik.oups.net/tickets/tickets/${ticketId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: newContent })
@@ -125,7 +125,7 @@ const Board = () => {
   };
 
   const handleDeleteTicket = (columnId, ticketId) => {
-    fetch(`http://localhost:8080/tickets/tickets/${ticketId}`, {
+    fetch(`https://api.kouwik.oups.net/tickets/tickets/${ticketId}`, {
       method: 'DELETE'
     })
     .then(response => {
