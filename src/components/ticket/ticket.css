@@ -1,22 +1,51 @@
 .ticket {
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .ticket p {
-    margin: 0;
-  }
-  
-  .ticket input {
-    width: 100%;
-    padding: 5px;
-    margin-bottom: 5px;
-  }
-  
-  .ticket button {
-    margin-right: 5px;
-  }
-  
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin: 10px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.ticket:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.ticket p {
+  margin: 5px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.ticket button {
+  background-color: #5C67F2;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  padding: 8px 12px;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ticket button:hover {
+  background-color: #434ad3;
+}
+
+.ticket button:last-child {
+  margin-right: 0;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+input[type="text"]:focus {
+  border-color: #5C67F2;
+}

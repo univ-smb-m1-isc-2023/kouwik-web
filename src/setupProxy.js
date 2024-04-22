@@ -27,4 +27,12 @@ module.exports = function(app) {
       changeOrigin: true,
     })
   );
+  app.use(
+    '/boards',
+    createProxyMiddleware({
+      target: 'https://api.kouwik.oups.net/',
+      ws: true, // Activation du support WebSocket
+      changeOrigin: true,
+    })
+  );
 };
