@@ -2,13 +2,13 @@
   display: flex;
   align-items: center;
   padding: 10px 30px;
-  background-color: #282c34;
+  background-color: #f8f9fa;
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header .logo {
-  height: 50px;
+  height: 40px;
   width: auto;
   margin-right: 20px;
   border-radius: 50%;  /* Rend l'image circulaire, retirez si ce n'est pas souhaité */

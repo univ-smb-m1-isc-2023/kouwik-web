@@ -1,12 +1,12 @@
 import React from 'react';
-import HeaderLogo from "../../ressources/pictures/tom.jpg";
+import HeaderLogo from "../../ressources/pictures/Kouwik2.png";
 import './header.css';
 
 function Header() {
   return (
     <header className="header">
       <img src={HeaderLogo} alt="Logo" className="logo" />
-      <h1 className="title">Mon Application</h1>
+
     </header>
   );
 }
