@@ -153,7 +153,7 @@ const Board = () => {
     <DndProvider backend={HTML5Backend}>
       <Header />
       <div className="board">
-        <button onClick={handleShareBoard}>Share This Board</button>
+        
         {columns.map(column =>
           <Column
             key={column.id}
@@ -168,7 +168,10 @@ const Board = () => {
           />
         )}
       </div>
-    </DndProvider>
+      <div className="share-button-container">
+      <button id="shareButton" onClick={handleShareBoard}>Share This Board</button>
+    </div>
+      </DndProvider>
   );
 };
 
