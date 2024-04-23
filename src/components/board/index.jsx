@@ -27,6 +27,7 @@ const Board = () => {
     };
   
     const userId = ensureUserId();
+    const [voteCount, setVoteCount] = useState(5); // Chaque utilisateur commence avec 5 votes disponibles.
 
 
   const fetchTickets = () => {
@@ -65,6 +66,11 @@ const Board = () => {
   };
 
   const handleVote = (columnId, ticketId, addVote) => {
+    if (addVote && voteCount <= 0) {
+      alert("Vous avez utilisé tous vos votes.");
+      return; // Sortie anticipée si l'utilisateur n'a plus de votes à utiliser
+    }
+  
     const url = `https://api.kouwik.oups.net/tickets/${ticketId}/vote?userId=${userId}&addVote=${addVote}`;
     fetch(url, {
       method: 'PUT',
@@ -79,6 +85,7 @@ const Board = () => {
           )
         } : column
       ));
+      setVoteCount(prev => prev + (addVote ? -1 : 1)); // Decrease if adding a vote, increase if removing
     })
     .catch(error => console.error('Error voting on ticket:', error));
   };
@@ -169,7 +176,7 @@ const Board = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <Header />
+      <Header votesLeft={voteCount} />
       <div className="board">
         
         {columns.map(column =>

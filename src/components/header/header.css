@@ -19,3 +19,8 @@
   font-weight: bold;
   margin: 0;
 }
+
+.vote-counter {
+  font-size: 18px;
+  color: #333;
+}
