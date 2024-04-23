@@ -14,8 +14,13 @@ const Ticket = ({ id, content, votes, columnId, onVote, onEdit, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
 
-  const handleVote = () => {
-    onVote(id);
+  // Appel à onVote avec le paramètre indiquant si on ajoute ou retire un vote
+  const handleAddVote = () => {
+    onVote(id, true);  // true pour ajouter un vote
+  };
+
+  const handleRemoveVote = () => {
+    onVote(id, false);  // false pour retirer un vote
   };
 
   const handleDelete = () => {
@@ -52,7 +57,6 @@ const Ticket = ({ id, content, votes, columnId, onVote, onEdit, onDelete }) => {
   
     setIsEditing(false);
   };
-  
 
   const handleChange = (e) => {
     setEditedContent(e.target.value);
@@ -72,9 +76,10 @@ const Ticket = ({ id, content, votes, columnId, onVote, onEdit, onDelete }) => {
         <>
           <p>{content}</p>
           <p>Votes: {votes}</p>
-          <button onClick={handleVote}>Vote</button>
+          <button onClick={handleAddVote}>Add Vote</button>
+          <button onClick={handleRemoveVote}>Remove Vote</button>
           <button onClick={handleEdit}>Edit</button>
-          <button onClick={handleDelete}>delete</button>
+          <button onClick={handleDelete}>Delete</button>
         </>
       )}
     </div>

@@ -4,6 +4,7 @@ import Column from '../column';
 import Header from '../header';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { v4 as uuidv4 } from 'uuid';
 import './board.css';
 
 const Board = () => {
@@ -14,6 +15,19 @@ const Board = () => {
     { id: 2, title: "Could be better", tickets: [] },
     { id: 3, title: "Actions", tickets: [] }
   ]);
+
+    // Ensure that each user has a unique ID
+    const ensureUserId = () => {
+      let userId = localStorage.getItem('userId');
+      if (!userId) {
+        userId = uuidv4();
+        localStorage.setItem('userId', userId);
+      }
+      return userId;
+    };
+  
+    const userId = ensureUserId();
+
 
   const fetchTickets = () => {
     fetch(`https://api.kouwik.oups.net/tickets/tickets?boardUuid=${uuid}`)
@@ -50,21 +64,25 @@ const Board = () => {
     });
   };
 
-  const handleVote = (columnId, ticketId) => {
-    fetch(`https://api.kouwik.oups.net/tickets/${ticketId}/vote`, { method: 'PUT' })
-      .then(response => response.json())
-      .then(updatedTicket => {
-        setColumns(columns.map(column =>
-          column.id === columnId ? {
-            ...column,
-            tickets: column.tickets.map(ticket =>
-              ticket.id === ticketId ? updatedTicket : ticket
-            )
-          } : column
-        ));
-      })
-      .catch(error => console.error('Error voting ticket:', error));
+  const handleVote = (columnId, ticketId, addVote) => {
+    const url = `https://api.kouwik.oups.net/tickets/${ticketId}/vote?userId=${userId}&addVote=${addVote}`;
+    fetch(url, {
+      method: 'PUT',
+    })
+    .then(response => response.json())
+    .then(updatedTicket => {
+      setColumns(columns.map(column =>
+        column.id === columnId ? {
+          ...column,
+          tickets: column.tickets.map(ticket =>
+            ticket.id === ticketId ? updatedTicket : ticket
+          )
+        } : column
+      ));
+    })
+    .catch(error => console.error('Error voting on ticket:', error));
   };
+
 
   const handleCreateTicket = (columnId, boardId, content = "Nouveau Ticket") => {
     // Assurez-vous que l'URL inclut le paramètre de requête pour boardId
@@ -160,7 +178,7 @@ const Board = () => {
             id={column.id}
             title={column.title}
             tickets={column.tickets}
-            onVote={(ticketId) => handleVote(column.id, ticketId)}
+            onVote={(ticketId, addVote) => handleVote(column.id,ticketId, addVote)}
             onEdit={(ticketId, newContent) => handleEdit(column.id, ticketId, newContent)}
             onMoveTicket={handleMoveTicket}
             onCreateTicket={(content) => handleCreateTicket(column.id, uuid, content)} // Passer le contenu et le boardUuid

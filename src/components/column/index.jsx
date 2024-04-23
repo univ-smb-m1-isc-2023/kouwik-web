@@ -8,6 +8,9 @@ const Column = ({ id, title, tickets, onVote, onEdit, onMoveTicket, onCreateTick
     accept: 'ticket',
     drop: (item) => onMoveTicket(item.id, id),
   });
+   const handleVote = (ticketId, addVote) => {
+    onVote(ticketId, addVote);  // Propager l'appel au parent avec les détails nécessaires
+  };
 
   return (
     <div ref={drop} className="column">
@@ -19,7 +22,7 @@ const Column = ({ id, title, tickets, onVote, onEdit, onMoveTicket, onCreateTick
           content={ticket.content}
           votes={ticket.votes}
           columnId={id}
-          onVote={onVote}
+          onVote={handleVote}
           onEdit={onEdit}
           onDelete={onDelete}
         />
