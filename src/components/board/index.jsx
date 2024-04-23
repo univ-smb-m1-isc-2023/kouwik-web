@@ -188,7 +188,7 @@ const Board = () => {
             onVote={(ticketId, addVote) => handleVote(column.id,ticketId, addVote)}
             onEdit={(ticketId, newContent) => handleEdit(column.id, ticketId, newContent)}
             onMoveTicket={handleMoveTicket}
-            onCreateTicket={(content) => handleCreateTicket(column.id, uuid, content)} // Passer le contenu et le boardUuid
+            onCreateTicket={(content) => handleCreateTicket(column.id, uuid, content = "new ticket")} // Passer le contenu et le boardUuid
             onDelete={(ticketId) => handleDeleteTicket(column.id, ticketId)} // Ajout de la fonction de suppression
           />
         )}
