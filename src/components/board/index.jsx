@@ -29,6 +29,9 @@ const Board = () => {
     const userId = ensureUserId();
     const [voteCount, setVoteCount] = useState(5); // Chaque utilisateur commence avec 5 votes disponibles.
 
+    const sortTicketsByVotes = (tickets) => {
+      return tickets.sort((a, b) => b.votes - a.votes); // Tri décroissant par votes
+    };
 
   const fetchTickets = () => {
     fetch(`https://api.kouwik.oups.net/tickets/tickets?boardUuid=${uuid}`)
@@ -41,8 +44,7 @@ const Board = () => {
       .then(data => {
         const newColumns = columns.map(column => ({
           ...column,
-          tickets: data.filter(ticket => ticket.columnId === column.id),
-        }));
+          tickets: sortTicketsByVotes(data.filter(ticket => ticket.columnId === column.id)),        }));
         setColumns(newColumns);  // Assume you have a useState hook to manage columns
       })
       .catch(error => console.error('Error fetching tickets:', error));
@@ -223,7 +225,7 @@ const Board = () => {
         )}
         {draft.isVisible && (
           <div className='draft-container'>
-            <h2>Nouveau ticket</h2>
+            <h2>New ticket</h2>
             <textarea value={draft.content} onChange={handleChangeDraft} />
             <button onClick={handlePublishDraft}>Publish</button>
             <button onClick={handleCancelDraft}>Cancel</button>

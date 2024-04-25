@@ -75,7 +75,7 @@ const Ticket = ({ id, content, votes, columnId, onVote, onEdit, onDelete }) => {
       ) : (
         <>
           <p>{content}</p>
-          <p>Votes: {votes}</p>
+          <p>Vote: {votes}</p>
           <button onClick={handleAddVote}>Add Vote</button>
           <button onClick={handleRemoveVote}>Remove Vote</button>
           <button onClick={handleEdit}>Edit</button>

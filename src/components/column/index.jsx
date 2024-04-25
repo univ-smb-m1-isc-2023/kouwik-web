@@ -14,7 +14,7 @@ const Column = ({ id, title, tickets, onVote, onEdit, onMoveTicket, onCreateTick
 
   return (
     <div ref={drop} className="column">
-      <h2>{title} <button onClick={() => onCreateTicket(id)}>Créer Ticket</button></h2>
+      <h2>{title} <button onClick={() => onCreateTicket(id)}>Create Ticket</button></h2>
       {tickets.map(ticket =>
         <Ticket
           key={ticket.id}
