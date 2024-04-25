@@ -25,7 +25,7 @@ const Board = () => {
       }
       return userId;
     };
-  
+    const [draft, setDraft] = useState({ content: '', columnId: null, isVisible: false });
     const userId = ensureUserId();
     const [voteCount, setVoteCount] = useState(5); // Chaque utilisateur commence avec 5 votes disponibles.
 
@@ -90,6 +90,35 @@ const Board = () => {
     .catch(error => console.error('Error voting on ticket:', error));
   };
 
+  const handleCreateDraft = (columnId) => {
+    setDraft({ content: '', columnId, isVisible: true });
+  };
+
+  const handleChangeDraft = (event) => {
+    setDraft({ ...draft, content: event.target.value });
+  };
+
+  const handleCancelDraft = () => {
+    setDraft({ content: '', columnId: null, isVisible: false });
+  };
+
+  const handlePublishDraft = () => {
+    if (!draft.content.trim()) return alert('Content cannot be empty');
+    const url = `https://api.kouwik.oups.net/tickets/tickets?boardId=${uuid}&columnId=${draft.columnId}`;
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: draft.content, columnId: draft.columnId })
+    })
+      .then(response => response.json())
+      .then(newTicket => {
+        setColumns(columns.map(column =>
+          column.id === draft.columnId ? { ...column, tickets: [...column.tickets, newTicket] } : column
+        ));
+        handleCancelDraft();
+      })
+      .catch(console.error);
+  };
 
   const handleCreateTicket = (columnId, boardId, content = "Nouveau Ticket") => {
     // Assurez-vous que l'URL inclut le paramètre de requête pour boardId
@@ -188,9 +217,17 @@ const Board = () => {
             onVote={(ticketId, addVote) => handleVote(column.id,ticketId, addVote)}
             onEdit={(ticketId, newContent) => handleEdit(column.id, ticketId, newContent)}
             onMoveTicket={handleMoveTicket}
-            onCreateTicket={(content) => handleCreateTicket(column.id, uuid, content = "new ticket")} // Passer le contenu et le boardUuid
+            onCreateTicket={handleCreateDraft}
             onDelete={(ticketId) => handleDeleteTicket(column.id, ticketId)} // Ajout de la fonction de suppression
           />
+        )}
+        {draft.isVisible && (
+          <div className='draft-container'>
+            <h2>Nouveau ticket</h2>
+            <textarea value={draft.content} onChange={handleChangeDraft} />
+            <button onClick={handlePublishDraft}>Publish</button>
+            <button onClick={handleCancelDraft}>Cancel</button>
+          </div>
         )}
       </div>
       <div className="share-button-container">
