@@ -13,7 +13,7 @@ function Header({ votesLeft }) {
 
   return (
     <header className="header">
-      <img src={HeaderLogo} alt="Logo" className="logo" onClick={goToHome} /> // Ajoutez l'écouteur d'événement onClick
+      <img src={HeaderLogo} alt="Logo" className="logo" onClick={goToHome} /> 
       <div className="vote-counter">
         Votes Left: {votesLeft}
       </div>
